@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>IFE-JavaScript-Task4</title>
+	<style type="text/css">
+
+		#queue{
+			height: 250px;
+			background: #fff;
+			margin: 20px 0;
+			font-size: 0;
+		}
+		#queue div{
+			width: 20px;
+			background: red;
+			display: inline-block;
+			margin: 0px 2px auto 2px;
+		}
+	</style>
+</head>
+<body>
+	<form onSubmit="return false">
+		<input type="text" name="number" id="inputNumber" />
+		<button id="left-in">左侧入</button>
+		<button id="right-in">右侧入</button>&nbsp;&nbsp;&nbsp;
+		<button id="left-out">左侧出</button>
+		<button id="right-out">右侧出</button>
+		<button id="sort">排序</button>
+	</form>
+	<div id="queue">
+	</div>
+	<script type="text/javascript">
+		var queueData = [];
+		var inputNumber = document.getElementById("inputNumber");
+		var leftIn = document.getElementById("left-in");
+		var rightIn = document.getElementById("right-in");
+		var leftOut = document.getElementById("left-out");
+		var rightOut = document.getElementById("right-out");
+		var sort = document.getElementById("sort");
+		var queue = document.getElementById("queue");
+
+		//封装四个按钮的功能
+		leftIn.onclick = function(){
+			if ((/^[1-9]\d*$/).test(inputNumber.value)&&parseInt(inputNumber.value) >= 10&&parseInt(inputNumber.value) <= 100) {
+				if (queueData.length <= 60) {
+					queueData.unshift(parseFloat(inputNumber.value));
+					inputNumber.value = "";
+					render();
+				}else{
+					alert("超出长度！");
+				}
+			}else{
+				alert("请输入10-100之间的整数");
+			}
+		}
+		rightIn.onclick = function(){
+			if ((/^[1-9]\d*$/).test(inputNumber.value)&&parseInt(inputNumber.value) >= 10&&parseInt(inputNumber.value) <= 100) {
+				if (queueData.length <= 60) {
+					queueData.push(parseFloat(inputNumber.value));
+					inputNumber.value = "";
+					render();
+				}else{
+					alert("超出长度！");
+				}
+			}else{
+				alert("请输入10-100之间的整数");
+			}
+		}
+		leftOut.onclick = function(){
+			alert(queueData.shift());
+			render();
+		}
+		rightOut.onclick = function(){
+			alert(queueData.pop());
+			render();
+		}
+		sort.onclick = function(){
+			for (var i = 0; i < queueData.length; i++) {
+				for (var j = 0; j < queueData.length-i; j++) {
+					if (queueData[j] > queueData[j + 1]) {
+						swap(queueData,j,j+1);
+					}
+				}
+			}
+			render();
+		}
+
+		//将数组元素加入div中
+		function render(){
+			var divArray = [];
+			var divs = queue.getElementsByTagName("div");
+			for (var i = 0; i < queueData.length; i++) {
+				divArray.push("<div></div>");
+			}
+				queue.innerHTML = divArray.join('');
+			for (let i = 0; i < divs.length; i++) {
+				divs[i].style.height = queueData[i]/100*250 + "px";
+				divs[i].style.marginTop = 250-queueData[i]/100*250 + "px";
+				divs[i].onclick = function(){
+					queueData.splice(i,1);
+					render();
+				}
+			}
+		}
+
+		//将数组的两个元素互换
+		function swap(items, firstIndex, secondIndex){
+  			var temp = items[firstIndex];
+  			items[firstIndex] = items[secondIndex];
+  			items[secondIndex] = temp;
+		};
+
+	</script>
+</body>
+</html>
